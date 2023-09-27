@@ -1,5 +1,5 @@
 const { User } = require("../models/User");
-
+const axios = require("axios");
 const getDate = async (id) => {
   const urlArr = ["person", "works"];
   const profileUrl = `https://pub.orcid.org/v3.0/${id}/`; // Замініть на власний ORCID ідентифікатор
@@ -13,6 +13,7 @@ const getDate = async (id) => {
 };
 
 const getDataByOrcid = async (req, res) => {
+  console.log("tut");
   const { orcid } = req.params;
   const data = await getDate(orcid);
   res.json(data);
@@ -43,5 +44,5 @@ const createUser = (req, res) => {
 module.exports = {
   getUsers,
   createUser,
-  getDataByOrcid
+  getDataByOrcid,
 };
