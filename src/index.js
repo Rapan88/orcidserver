@@ -1,9 +1,13 @@
 const cors = require("cors");
 const express = require("express");
+const { getUsers, createUser } = require("./controllers/dataController");
 const fs = require("fs");
 const https = require("https");
 const app = express();
-const db = require('./config/queries.js')
+// const db = require('./config/queries.js')
+const {syncDatabase} = require('./models/User');
+
+syncDatabase();
 
 app.use(cors());
 app.use(express.urlencoded({ extended: true }));
@@ -19,10 +23,10 @@ app.use(function (req, res, next) {
 
 const port = 3000;
 
-app.get('/users', db.getUsers)
-app.get('/users/:orcid', db.getUserByOrcid)
-app.post('/users', db.createUser)
-app.delete('/users/:orcid', db.deleteUser)
+app.get("/users", getUsers);
+// app.get('/users/:orcid', db.getUserByOrcid)
+app.post('/users',createUser)
+// app.delete('/users/:orcid', db.deleteUser)
 
 httpsOptions = {
   key: fs.readFileSync("ssl/key.pem"), // путь к ключу
