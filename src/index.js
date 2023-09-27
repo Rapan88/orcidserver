@@ -1,11 +1,15 @@
 const cors = require("cors");
 const express = require("express");
-const { getUsers, createUser } = require("./controllers/dataController");
+const {
+  getUsers,
+  createUser,
+  getDataByOrcid,
+} = require("./controllers/dataController");
 const fs = require("fs");
 const https = require("https");
 const app = express();
 // const db = require('./config/queries.js')
-const {syncDatabase} = require('./models/User');
+const { syncDatabase } = require("./models/User");
 
 syncDatabase();
 
@@ -25,8 +29,9 @@ const port = 3000;
 
 app.get("/users", getUsers);
 // app.get('/users/:orcid', db.getUserByOrcid)
-app.post('/users',createUser)
+app.post("/users", createUser);
 // app.delete('/users/:orcid', db.deleteUser)
+app.get("/getDataByOrcid:/orcid", getDataByOrcid);
 
 httpsOptions = {
   key: fs.readFileSync("ssl/key.pem"), // путь к ключу

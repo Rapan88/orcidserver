@@ -1,5 +1,23 @@
 const { User } = require("../models/User");
 
+const getDate = async (id) => {
+  const urlArr = ["person", "works"];
+  const profileUrl = `https://pub.orcid.org/v3.0/${id}/`; // Замініть на власний ORCID ідентифікатор
+  const result = {};
+
+  for (let i = 0; i < urlArr.length; i++) {
+    result[urlArr[i]] = (await axios.get(`${profileUrl}${urlArr[i]}`)).data;
+  }
+
+  return result;
+};
+
+const getDataByOrcid = async (req, res) => {
+  const { orcid } = req.params;
+  const data = await getDate(orcid);
+  res.json(data);
+};
+
 const getUsers = (req, res) => {
   User.findAll()
     .then((users) => {
@@ -25,4 +43,5 @@ const createUser = (req, res) => {
 module.exports = {
   getUsers,
   createUser,
+  getDataByOrcid
 };
