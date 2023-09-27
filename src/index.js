@@ -1,9 +1,7 @@
 const cors = require("cors");
 const express = require("express");
-// const axios = require("axios");
 const fs = require("fs");
 const https = require("https");
-// const {addTeacher, getAllTeachers, getInfoByOrcid} = require("./controllers/dataController");
 const app = express();
 const db = require('./config/queries.js')
 
