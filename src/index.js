@@ -31,7 +31,7 @@ app.get("/users", getUsers);
 // app.get('/users/:orcid', db.getUserByOrcid)
 app.post("/users", createUser);
 // app.delete('/users/:orcid', db.deleteUser)
-app.get("/getDataByOrcid:/orcid", getDataByOrcid);
+app.get("/getDataByOrcid/:orcid", getDataByOrcid);
 
 httpsOptions = {
   key: fs.readFileSync("ssl/key.pem"), // путь к ключу
