@@ -6,10 +6,10 @@ const UserData = sequelize.define("User_data", {
     type: DataTypes.STRING,
     allowNull: false,
     unique: true,
-    primaryKey: true, // Встановлюємо поле "orcid" як первинний ключ
+    primaryKey: true,
   },
   data: {
-    type: DataTypes.ARRAY(DataTypes.JSON), // Масив об'єктів
+    type: DataTypes.ARRAY(DataTypes.JSON),
     allowNull: false,
   },
 });

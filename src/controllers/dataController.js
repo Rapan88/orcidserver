@@ -4,7 +4,7 @@ const { UserData } = require("../models/UserData");
 
 const getDate = async (id) => {
   const urlArr = ["person", "works"];
-  const profileUrl = `https://pub.orcid.org/v3.0/${id}/`; // Замініть на власний ORCID ідентифікатор
+  const profileUrl = `${process.env.ORCID_URL}${id}/`;
   let result = {};
   try {
     for (let i = 0; i < urlArr.length; i++) {
@@ -75,7 +75,6 @@ const getUsers = (req, res) => {
 
 const createUser = (req, res) => {
   const { full_name, orcid, rank, position, section } = req.body;
-
   User.create({ full_name, orcid, rank, position, section })
     .then((user) => {
       res.status(201).json(user);
@@ -85,8 +84,30 @@ const createUser = (req, res) => {
     });
 };
 
+const deleteUser = (req, res) => {
+  const { orcid } = req.params;
+
+  User.destroy({
+    where: { orcid },
+  })
+    .then((deletedRowCount) => {
+      if (deletedRowCount > 0) {
+        console.log(`Користувач з orcid ${orcid} був видалений.`);
+      } else {
+        console.log(
+          `Користувача з orcid ${orcid} не знайдено або не було видалено.`
+        );
+      }
+    })
+    .catch((error) => {
+      console.error("Помилка при видаленні користувача:", error);
+    });
+  res.status(201).end();
+};
+
 module.exports = {
   getUsers,
   createUser,
   getDataByOrcid,
+  deleteUser,
 };

@@ -1,9 +1,11 @@
+require("dotenv").config();
 const cors = require("cors");
 const express = require("express");
 const {
   getUsers,
   createUser,
   getDataByOrcid,
+  deleteUser,
 } = require("./controllers/dataController");
 const fs = require("fs");
 const https = require("https");
@@ -31,7 +33,7 @@ app.get("/users", getUsers);
 app.get("/getDataByOrcid/:orcid", getDataByOrcid);
 // app.get('/users/:orcid', db.getUserByOrcid)
 app.post("/users", createUser);
-// app.delete('/users/:orcid', db.deleteUser)
+app.delete("/users/:orcid", deleteUser);
 
 httpsOptions = {
   key: fs.readFileSync("ssl/key.pem"), // путь к ключу

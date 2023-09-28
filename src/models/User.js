@@ -1,5 +1,5 @@
 const { DataTypes } = require("sequelize");
-const sequelize = require("../config/queries"); // Шлях до файлу із налаштуваннями Sequelize
+const sequelize = require("../config/queries");
 const { UserData } = require("./UserData");
 
 const User = sequelize.define("User", {
