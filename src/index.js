@@ -10,7 +10,6 @@ const {
 const fs = require("fs");
 const https = require("https");
 const app = express();
-// const db = require('./config/queries.js')
 const { syncDatabase } = require("./models/User");
 
 syncDatabase();
@@ -27,17 +26,14 @@ app.use(function (req, res, next) {
   next();
 });
 
-const port = 3000;
-
 app.get("/users", getUsers);
 app.get("/getDataByOrcid/:orcid", getDataByOrcid);
-// app.get('/users/:orcid', db.getUserByOrcid)
 app.post("/users", createUser);
 app.delete("/users/:orcid", deleteUser);
 
 httpsOptions = {
-  key: fs.readFileSync("ssl/key.pem"), // путь к ключу
-  cert: fs.readFileSync("ssl/cert.pem"), // путь к сертификату
+  key: fs.readFileSync("ssl/key.pem"),
+  cert: fs.readFileSync("ssl/cert.pem"),
 };
 
-https.createServer(httpsOptions, app).listen(port);
+https.createServer(httpsOptions, app).listen(process.env.PORT);
