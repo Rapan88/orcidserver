@@ -1,22 +1,66 @@
 const { User } = require("../models/User");
 const axios = require("axios");
+const { UserData } = require("../models/UserData");
+
 const getDate = async (id) => {
   const urlArr = ["person", "works"];
   const profileUrl = `https://pub.orcid.org/v3.0/${id}/`; // Замініть на власний ORCID ідентифікатор
-  const result = {};
-
-  for (let i = 0; i < urlArr.length; i++) {
-    result[urlArr[i]] = (await axios.get(`${profileUrl}${urlArr[i]}`)).data;
+  let result = {};
+  try {
+    for (let i = 0; i < urlArr.length; i++) {
+      result[urlArr[i]] = (await axios.get(`${profileUrl}${urlArr[i]}`)).data;
+    }
+  } catch (err) {
+    result = null;
+    console.log(err);
   }
-
   return result;
 };
 
+getUserDataFromDB = async (orcid) => {
+  return await UserData.findByPk(orcid).then((userData) => {
+    if (userData) {
+      return userData;
+    } else {
+      console.log(`Не знайдено даних користувача ${orcid}`);
+      return;
+    }
+  });
+};
+
+updateUserData = async (updatedData, orcid) => {
+  return await UserData.findOrCreate({
+    where: { orcid },
+    defaults: updatedData,
+  })
+    .then(([userData, created]) => {
+      if (created) {
+        console.log(`Створено нового користувача з orcid ${orcid}.`);
+      } else {
+        console.log(`Оновлено користувача з orcid ${orcid}.`);
+      }
+      return userData;
+    })
+    .catch((error) => {
+      console.error("Помилка при оновленні або створенні користувача:", error);
+      return null;
+    });
+};
+
 const getDataByOrcid = async (req, res) => {
-  console.log("tut");
   const { orcid } = req.params;
-  const data = await getDate(orcid);
-  res.json(data);
+  let result = { orcid, data: [] };
+  let userData = await getDate(orcid);
+
+  if (userData) {
+    userData.works.group.forEach((item) => {
+      result.data.push(JSON.stringify(item));
+    });
+    result = await updateUserData(result, orcid);
+  } else {
+    result = await getUserDataFromDB(orcid);
+  }
+  res.json(result);
 };
 
 const getUsers = (req, res) => {
